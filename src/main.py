@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import os
 from dateutil.relativedelta import relativedelta
 
-# fill
 
 def main():
     # Load and preprocess data
@@ -58,7 +57,7 @@ def main():
     steps = 32
 
     # SARIMA is trained for future data, which the following code reflects
-    future_data = pd.date_range(start=date_series[-1], periods=steps + 1, freq='ME')[1:]
+    future_data = pd.date_range(start=date_series[-1], periods=steps + 1, freq='M')[1:]
     y_pred_sarima = linear_model.predict_sarima(steps=steps)
 
     # Clustering
