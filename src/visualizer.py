@@ -1,15 +1,16 @@
 # Data Visualization
 
 # IMPORTS
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
-from typing import List, Tuple
 import pandas as pd
+from typing import List, Tuple
 
 class Visualizer:
     @staticmethod
     def plot_temperature_trend(years: List[int], temperatures: List[float], predictions: List[float]) -> None:
-        plt.figure(figsize=(10, 6))  # Adjusted figure size
+        plt.figure(figsize=(10, 6))  
         plt.plot(years, temperatures, label='Actual', marker='o')
         plt.plot(years, predictions, label='Predicted', linestyle='--', marker='x')
         plt.xlabel('Year')
@@ -37,7 +38,7 @@ class Visualizer:
         plt.figure(figsize=(10, 6))
         time = list(range(len(time_series)))
         plt.plot(time, time_series, label='Time Series')
-        
+
         anomaly_points = [val if is_anomaly else None for val, is_anomaly in zip(time_series, anomalies)]
         plt.scatter(time, anomaly_points, color='red', label='Anomalies', zorder=5)
 
@@ -48,22 +49,21 @@ class Visualizer:
         plt.grid(True)
         plt.tight_layout()
         plt.show()
-    
-    
+
     @staticmethod
     def plot_training_data():
-        import pandas as pd
-        import matplotlib.pyplot as plt
-        import seaborn as sns
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  
+        data_path = os.path.join(base_dir, "data", "WeatherData.csv")
+
 
         # Load the CSV
-        df = pd.read_csv('../data/WeatherData.csv', parse_dates=['DATE'])
+        df = pd.read_csv(data_path, parse_dates=['DATE'])
 
-        # Convert the DATE column to datetime and set as index (optional)
+        # Convert the DATE column to datetime and set as index
         df['DATE'] = pd.to_datetime(df['DATE'], format='%Y-%m')
         df.set_index('DATE', inplace=True)
 
-        # Convert numeric columns (some may still be object due to empty values)
+        # Ensure numeric columns are correctly interpreted
         df = df.apply(pd.to_numeric, errors='coerce')
 
         # 1. Average Temperature Over Time
@@ -116,11 +116,6 @@ class Visualizer:
         plt.ylabel('Temperature (°F)')
         plt.tight_layout()
         plt.show()
-
-
-            
-
-
 
 if __name__ == '__main__':
     visualize = Visualizer()
