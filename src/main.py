@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 from dateutil.relativedelta import relativedelta
+from visualizer import Visualizer
 
 
 def main():
@@ -16,11 +17,13 @@ def main():
     # Uses os to locate our csv for WeatherData
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     file_path = os.path.join(BASE_DIR, 'data', 'WeatherData.csv')
-
     # Checks to ensure the file path exists
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Data file not found at {file_path}")
 
+    v = Visualizer()
+    v.plot_training_data()
+    
     # Uses the DataProcessor class to load and clean our dataset, as well as get features & targets
     processor = DataProcessor(file_path)
     processor.load_data()
