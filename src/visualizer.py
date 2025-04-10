@@ -1,6 +1,5 @@
 # Data Visualization
 
-# IMPORTS
 import os
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -8,8 +7,15 @@ import pandas as pd
 from typing import List, Tuple
 
 class Visualizer:
+    """
+    A class that provides static methods for visualizing climate and weather-related data,
+    including temperature trends, clusters, anomalies, and various plots from a weather dataset.
+    """
     @staticmethod
     def plot_temperature_trend(years: List[int], temperatures: List[float], predictions: List[float]) -> None:
+        """
+        Plot the actual and predicted temperature trends over time.
+        """
         plt.figure(figsize=(10, 6))  
         plt.plot(years, temperatures, label='Actual', marker='o')
         plt.plot(years, predictions, label='Predicted', linestyle='--', marker='x')
@@ -23,6 +29,9 @@ class Visualizer:
 
     @staticmethod
     def plot_clustered_data(data: List[Tuple[float, float]], labels: List[int]) -> None:
+        """
+        Plot clustered 2D data points with different colors for each cluster.
+        """
         x, y = zip(*data)
         plt.figure(figsize=(8, 6))
         sns.scatterplot(x=x, y=y, hue=labels, palette='Set2', s=60, edgecolor='k')
@@ -35,6 +44,9 @@ class Visualizer:
 
     @staticmethod
     def plot_anomalies(time_series: List[float], anomalies: List[bool]) -> None:
+        """
+        Plot a time series with anomalies highlighted in red.
+        """
         plt.figure(figsize=(10, 6))
         time = list(range(len(time_series)))
         plt.plot(time, time_series, label='Time Series')
@@ -52,6 +64,15 @@ class Visualizer:
 
     @staticmethod
     def plot_training_data():
+        """
+        Load historical weather data and create multiple visualizations:
+        - Line plot of average temperature
+        - Line plots of TAVG, TMAX, TMIN
+        - Area plot of precipitation and snowfall
+        - Heatmap of average monthly temperatures by year
+        - Dual axis plot of temperature and precipitation
+        - Bar plot of extreme monthly high temperatures
+        """
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))  
         data_path = os.path.join(base_dir, "data", "WeatherData.csv")
 
