@@ -21,8 +21,6 @@ def main():
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"Data file not found at {file_path}")
 
-    v = Visualizer()
-    v.plot_training_data()
     
     # Uses the DataProcessor class to load and clean our dataset, as well as get features & targets
     processor = DataProcessor(file_path)
@@ -92,7 +90,25 @@ def main():
     print(f"Linear Model - MAE: {mae_linear}, MSE: {rmse_linear}")
     print(f"SARIMA Model - MAE: {mae_sarima}, MSE: {rmse_sarima}")
     
-    pass
+    # Visualize the results using the Visualizer class
+    # Plot Linear vs Actual Data
+    Visualizer.plot_linear_vs_actual(list(range(len(y))), y, y_pred_linear_denorm)
+
+    # Plot SARIMA vs Actual Data
+    Visualizer.plot_sarima_vs_actual(list(range(len(y_pred_sarima))), y[-32:], y_pred_sarima)
+
+    # Plot Future SARIMA Predictions
+    Visualizer.plot_future_predictions(list(range(len(y), len(y) + steps)), y_pred_sarima, 'Future SARIMA Predictions')
+
+    # Plot anomalies in Linear Model Predictions
+    Visualizer.plot_anomalies(y, raw_anomalies, 'Anomalies in Linear Model Predictions')
+
+    # Plot anomalies in SARIMA Model Predictions
+    Visualizer.plot_anomalies(y_pred_sarima, sarima_anomalies, 'Anomalies in SARIMA Model Predictions')
+
+    # Visualize Clustering Results
+    Visualizer.plot_clustered_data(list(zip(X[:, 0], X[:, 1])), raw_labels, 'Clustering Results (Linear Model)')
+    Visualizer.plot_clustered_data(list(zip(sarima_features[:, 0], sarima_features[:, 1])), sarima_labels, 'Clustering Results (SARIMA Model)')
 
 
 if __name__ == "__main__":
