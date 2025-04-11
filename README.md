@@ -18,10 +18,12 @@ Run the main script:
 
 Or use the command-line interface
 
-1. Show available commands: `python src/cli.py data/climate_data.csv --help`
-2. Train Linear and SARIMA models: `python src/cli.py data/WeatherData.csv -–train`
-3. Visualize the data: `python src/cli.py data/WeatherData.csv -–visualize`
+1. Show available commands: `python src/cli.py --help`
+2. Train Linear and SARIMA models: `python src/cli.py data/WeatherData.csv --train`
+3. Visualize the data: `python src/cli.py data/WeatherData.csv --visualize`
 4. Analyze and detect anomalies in data: `python src/cli.py data/WeatherData.csv --analyze`
+5. Run all three commands: 
+`python src/cli.py data/WeatherData.csv --train --visualize --analyze`
 
 ### Running Tests
 
