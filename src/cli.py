@@ -65,6 +65,9 @@ def main():
     steps = 32  
     y_pred_sarima = linear_model.predict_sarima(steps=steps)
 
+    raw_anomalies = []
+    sarima_anomalies = []
+
     if args.train:
         # Evaluate model performance
         mae_linear = mean_absolute_error(y_denorm, y_pred_linear_denorm)
@@ -90,11 +93,11 @@ def main():
         sarima_anomalies = linear_model.detect_anomalies(y_pred_sarima, window_size=20, threshold=2.0)
         
         print(f"\nDetected {len(raw_anomalies)} anomalies in past data.")
-        if raw_anomalies:
+        if raw_anomalies.size:
             print(f"First 5 anomaly indices: {raw_anomalies[:5]}")
         
         print(f"\nDetected {len(sarima_anomalies)} anomalies in future predictions.")
-        if sarima_anomalies:
+        if sarima_anomalies.size:
             print(f"First 5 predicted anomaly indices: {sarima_anomalies[:5]}")
 
     if args.visualize:
@@ -110,8 +113,6 @@ def main():
         # Plot Future SARIMA Predictions
         visualizer.plot_future_predictions(list(range(len(y), len(y) + steps)), y_pred_sarima, 'Future SARIMA Predictions')
 
-        raw_anomalies = []
-        sarima_anomalies = []
 
         # Anomaly visualization
         visualizer.plot_anomalies(y, raw_anomalies, 'Anomalies in Linear Model Predictions')
