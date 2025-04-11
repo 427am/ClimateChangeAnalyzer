@@ -114,4 +114,3 @@ class Visualizer:
         """
         Visualizer.plot_temperature_trend(years, actuals, linear_predictions, 'Linear Model vs Actual Temperature')
 
-
