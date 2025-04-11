@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch
 from src.visualizer import Visualizer
+from datetime import datetime
 
 class TestVisualizer(unittest.TestCase):
 
@@ -28,10 +29,28 @@ class TestVisualizer(unittest.TestCase):
 
     @patch("matplotlib.pyplot.show")
     def test_plot_anomalies(self, mock_show):
+        # Use datetime objects for dates
+        dates = [
+            datetime(2020, 1, 1), 
+            datetime(2020, 1, 2), 
+            datetime(2020, 1, 3),
+            datetime(2020, 1, 4),
+            datetime(2020, 1, 5),
+            datetime(2020, 1, 6)
+        ]
+        
+        # Sample temperature values and anomalies (True for anomaly)
         data = [1, 2, 3, 100, 5, 6]
         anomalies = [False, False, False, True, False, False]
-        Visualizer.plot_anomalies(data, anomalies, "Anomaly Detection")
+        
+        title = "Anomaly Detection"
+        
+        # Call the plot_anomalies method with the correct parameters
+        Visualizer.plot_anomalies(dates, data, anomalies, title)
+        
+        # Check if plt.show() was called
         mock_show.assert_called_once()
+
 
     @patch("matplotlib.pyplot.show")
     def test_plot_sarima_vs_actual(self, mock_show):
