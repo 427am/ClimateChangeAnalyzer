@@ -1,6 +1,7 @@
 # Main
 
 # IMPORTS
+import warnings
 from data_processor import DataProcessor
 from algorithms import CustomTemperaturePredictor
 import numpy as np
@@ -11,6 +12,8 @@ import os
 from dateutil.relativedelta import relativedelta
 from visualizer import Visualizer
 
+warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.simplefilter(action='ignore', category=UserWarning)
 
 def main():
     # Load and preprocess data
