@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 from typing import List, Tuple
+import pandas as pd
+import matplotlib.dates as mdates
 
 class Visualizer:
     """
@@ -59,28 +61,38 @@ class Visualizer:
         plt.figure(figsize=(8, 6))
         sns.scatterplot(x=x, y=y, hue=labels, palette='Set2', s=60, edgecolor='k')
         plt.title(title)
-        plt.xlabel('Feature 1 (Cluster)')
-        plt.ylabel('Feature 2 (Cluster)')
+        plt.xlabel('Year')
+        plt.ylabel('cluster size')
         plt.legend(title='Cluster')
         plt.tight_layout()
         plt.show()
-
+  
     @staticmethod
-    def plot_anomalies(all_values, anomalies, title):
-        time = list(range(len(all_values)))
+    def plot_anomalies(dates, values, anomalies, title):
+        """
+        Plots data with highlighted anomalies.
+
+        Parameters:
+        - dates: list or pandas Series of datetime objects (for x-axis)
+        - values: list or array of temperature values (denormalized if desired)
+        - anomalies: list of booleans indicating which points are anomalies
+        - title: string for the plot title
+        """
         anomaly_indices = [i for i, is_anomaly in enumerate(anomalies) if is_anomaly]
-        anomaly_points = [all_values[i] for i in anomaly_indices]
+        anomaly_dates = [dates[i] for i in anomaly_indices]
+        anomaly_values = [values[i] for i in anomaly_indices]
 
         plt.figure(figsize=(10, 6))
-        plt.plot(time, all_values, label='Data')
-        plt.scatter(anomaly_indices, anomaly_points, color='red', label='Anomalies', zorder=5)
+        plt.plot(dates, values, label='Temperature')
+        plt.scatter(anomaly_dates, anomaly_values, color='red', label='Anomalies', zorder=5)
         plt.title(title)
-        plt.xlabel('Time Index')
-        plt.ylabel('Normalized Temperature')
+        plt.xlabel('Date')
+        plt.ylabel('Temperature (°C)')
         plt.legend()
         plt.grid(True)
         plt.tight_layout()
         plt.show()
+
 
     @staticmethod
     def plot_sarima_vs_actual(years: List[int], actuals: List[float], sarima_predictions: List[float]) -> None:

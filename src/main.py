@@ -92,26 +92,32 @@ def main():
     print("\n Comparing Accuracy of Linear and SARIMA Models:")
     print(f"Linear Model - MAE: {mae_linear}, MSE: {rmse_linear}")
     print(f"SARIMA Model - MAE: {mae_sarima}, MSE: {rmse_sarima}")
-    
-    # Visualize the results using the Visualizer class
-    # Plot Linear vs Actual Data
-    Visualizer.plot_linear_vs_actual(list(range(len(y))), y, y_pred_linear_denorm)
 
-    # Plot SARIMA vs Actual Data
-    Visualizer.plot_sarima_vs_actual(list(range(len(y_pred_sarima))), y[-32:], y_pred_sarima)
+    # Visualize the results using the Visualizer class
+    Visualizer.plot_linear_vs_actual(date_series, y, y_pred_linear_denorm)
+
+    # Plot SARIMA vs Actual Data using proper date range
+    Visualizer.plot_sarima_vs_actual(future_data, y[-32:], y_pred_sarima)
 
     # Plot Future SARIMA Predictions
-    Visualizer.plot_future_predictions(list(range(len(y), len(y) + steps)), y_pred_sarima, 'Future SARIMA Predictions')
+    Visualizer.plot_future_predictions(future_data, y_pred_sarima, 'Future SARIMA Predictions')
 
     # Plot anomalies in Linear Model Predictions
-    Visualizer.plot_anomalies(y, raw_anomalies, 'Anomalies in Linear Model Predictions')
+    Visualizer.plot_anomalies(date_series, y_denorm, raw_anomalies, 'Anomalies in Linear Model Predictions')
+
 
     # Plot anomalies in SARIMA Model Predictions
-    Visualizer.plot_anomalies(y_pred_sarima, sarima_anomalies, 'Anomalies in SARIMA Model Predictions')
+    Visualizer.plot_anomalies(future_data, y_pred_sarima, sarima_anomalies, 'Anomalies in SARIMA Model Predictions')
 
-    # Visualize Clustering Results
+
+    # Clustering Results
     Visualizer.plot_clustered_data(list(zip(X[:, 0], X[:, 1])), raw_labels, 'Clustering Results (Linear Model)')
+
+    # Ensure that sarima_features[:, 0] is a datetime object
+    sarima_features[:, 0] = pd.to_datetime(sarima_features[:, 0], errors='coerce')
+    # Now plot using the updated datetime data
     Visualizer.plot_clustered_data(list(zip(sarima_features[:, 0], sarima_features[:, 1])), sarima_labels, 'Clustering Results (SARIMA Model)')
+    
 
 
 if __name__ == "__main__":
