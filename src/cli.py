@@ -63,6 +63,7 @@ def main():
     # Train the SARIMA model
     linear_model.fit_sarima(date_series, y)
     steps = 32  
+    future_data = pd.date_range(start=date_series[-1], periods=steps + 1, freq='M')[1:]
     y_pred_sarima = linear_model.predict_sarima(steps=steps)
 
     raw_anomalies = []
@@ -115,8 +116,8 @@ def main():
 
 
         # Anomaly visualization
-        visualizer.plot_anomalies(y, raw_anomalies, 'Anomalies in Linear Model Predictions')
-        visualizer.plot_anomalies(y_pred_sarima, sarima_anomalies, 'Anomalies in SARIMA Model Predictions')
+        visualizer.plot_anomalies(date_series, y_denorm, raw_anomalies, 'Anomalies in Linear Model Predictions')
+        visualizer.plot_anomalies(future_data, y_pred_sarima, sarima_anomalies, 'Anomalies in SARIMA Model Predictions')
 
 
         # Clustering
