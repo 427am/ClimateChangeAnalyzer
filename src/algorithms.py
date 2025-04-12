@@ -23,6 +23,7 @@ class CustomTemperaturePredictor(BaseEstimator, RegressorMixin):
         self.intercept = 0.0
         self.bias = 0.0
 
+        # Uses scaler to normalize the data
         self.X_scaler = StandardScaler()
         self.y_scaler = StandardScaler()
 
@@ -43,6 +44,7 @@ class CustomTemperaturePredictor(BaseEstimator, RegressorMixin):
         self.weights = np.zeros(n)
         self.bias = 0
 
+        # Scales the linear model to ensure accurate results
         X_scaled = self.X_scaler.fit_transform(X)
         y_scaled = self.y_scaler.fit_transform(y.reshape(-1, 1)).flatten()
 
