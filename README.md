@@ -47,7 +47,8 @@ Afterwards, tests can be run individually:
     - `test_algorithms.py`: Unit test for algorithms.py
     - `test_data_processor.py`: Unit test for data_processor.py
     - `test_visualizer.py`: Unit test for visualizer.py
-- `data/`: Climate data (CSV format)
+- `data/`: Climate data 
+    - `WeatherData.csv`: Weather dataset in CSV format
 - `requirements.txt`: Project dependencies
 - `project_report_MLA.pdf`: Project report in MLA formatting
 - `project_report_IEEE.pdf`: Project report in IEEE formatting
