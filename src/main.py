@@ -43,18 +43,12 @@ def main():
     if len(y) != len(date_series):
         raise ValueError(f"Length mismatch: {len(y)} targets vs {len(date_series)} dates")
     
-    # find the min and max for average temp to help train the linear model
-    avg_temp_min = processor.data['AVG_TEMP'].min()
-    avg_temp_max = processor.data['AVG_TEMP'].max()
-    
     # Temperature prediction and fitting for the linear model
     linear_model = CustomTemperaturePredictor(learning_rate=0.001, n_iterations=2000)
     linear_model.fit(X, y)
 
     # Data is slightly denormalized to ensure the linear model is better comparable to SARIMA
     y_pred_linear = linear_model.predict(X)
-    y_pred_linear_denorm = y_pred_linear * (avg_temp_max - avg_temp_min) + avg_temp_min
-    y_denorm = y * (avg_temp_max - avg_temp_min) + avg_temp_min
     
     # Temperature prediction with SARIMA model
     linear_model.fit_sarima(date_series, y)
@@ -80,8 +74,8 @@ def main():
 
     # Evaluate accuracy of each model
     # Find the Mean Absolute and Mean Squared Errors for our linear model
-    mae_linear = mean_absolute_error(y_denorm, y_pred_linear_denorm)
-    rmse_linear = mean_squared_error(y_denorm, y_pred_linear_denorm)
+    mae_linear = mean_absolute_error(y, y_pred_linear)
+    rmse_linear = np.sqrt(mean_squared_error(y, y_pred_linear))
 
     # Find the Mean Absolute and Mean Squared Errors for our SARIMA model
     y_sarima_sample = linear_model.sarima_model.fittedvalues
@@ -94,7 +88,7 @@ def main():
     print(f"SARIMA Model - MAE: {mae_sarima}, MSE: {rmse_sarima}")
 
     # Visualize the results using the Visualizer class
-    Visualizer.plot_linear_vs_actual(date_series, y, y_pred_linear_denorm)
+    Visualizer.plot_linear_vs_actual(date_series, y, y_pred_linear)
 
     # Plot SARIMA vs Actual Data using proper date range
     Visualizer.plot_sarima_vs_actual(future_data, y[-32:], y_pred_sarima)
@@ -103,7 +97,7 @@ def main():
     Visualizer.plot_future_predictions(future_data, y_pred_sarima, 'Future SARIMA Predictions')
 
     # Plot anomalies in Linear Model Predictions
-    Visualizer.plot_anomalies(date_series, y_denorm, raw_anomalies, 'Anomalies in Linear Model Predictions')
+    Visualizer.plot_anomalies(date_series, y, raw_anomalies, 'Anomalies in Linear Model Predictions')
 
 
     # Plot anomalies in SARIMA Model Predictions

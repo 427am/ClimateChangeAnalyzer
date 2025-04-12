@@ -5,6 +5,7 @@ import numpy as np
 import pandas as pd
 import data_processor
 from sklearn.base import BaseEstimator, RegressorMixin
+from sklearn.preprocessing import StandardScaler
 from statsmodels.tsa.statespace.sarimax import SARIMAX
 from typing import Tuple
 
@@ -21,6 +22,9 @@ class CustomTemperaturePredictor(BaseEstimator, RegressorMixin):
         self.slope = 0.0
         self.intercept = 0.0
         self.bias = 0.0
+
+        self.X_scaler = StandardScaler()
+        self.y_scaler = StandardScaler()
 
         # Written to initialize the SARIMA Model
         # For the SARIMA Model, uses months as its seasonal order
@@ -39,16 +43,19 @@ class CustomTemperaturePredictor(BaseEstimator, RegressorMixin):
         self.weights = np.zeros(n)
         self.bias = 0
 
+        X_scaled = self.X_scaler.fit_transform(X)
+        y_scaled = self.y_scaler.fit_transform(y.reshape(-1, 1)).flatten()
+
         # Uses L2 regularization to ensure more accuracy for our linear model
         lambda_reg = 0.1
 
         # Code for training the model, uses a gradient to do so
         for i in range(self.n_iterations):
-            y_pred = np.dot(X, self.weights) + self.bias
-            error = y_pred - y
+            y_pred = np.dot(X_scaled, self.weights) + self.bias
+            error = y_pred - y_scaled
 
             # Formula for the gradients, with L2 regularization included
-            gradient_weights = (-2/m) * np.dot(X.T, error) + lambda_reg * self.weights
+            gradient_weights = (-2/m) * np.dot(X_scaled.T, error) + lambda_reg * self.weights
             gradient_bias = (-2/m) * np.sum(error)
             
             # Ensure the data set does not contain NaN values
@@ -56,10 +63,6 @@ class CustomTemperaturePredictor(BaseEstimator, RegressorMixin):
                 print("NaN detected. Training halted")
                 break
            
-            # Clips the gradient weights and bias to help with normalization of the data
-            gradient_weights = np.clip(gradient_weights, -1.0, 1.0)
-            gradient_bias = np.clip(gradient_bias, -1.0, 1.0)
-
             # Sets the weights and biases for the linear model
             self.weights -= self.learning_rate * gradient_weights
             self.bias -= self.learning_rate * gradient_bias
@@ -81,7 +84,10 @@ class CustomTemperaturePredictor(BaseEstimator, RegressorMixin):
 
     # Predictor for the linear model, which returns a dot product of the trained data
     def predict(self, X: np.ndarray) -> np.ndarray:
-        return np.dot(X, self.weights) + self.bias
+        X_scaled = self.X_scaler.transform(X)
+        y_pred_scaled = np.dot(X_scaled, self.weights) + self.bias
+        y_pred = self.y_scaler.inverse_transform(y_pred_scaled.reshape(-1, 1))
+        return y_pred.flatten()
 
     # Predictor for the SARIMA model
     # Checks that the model has been trained, and creates a forecast with the given # of steps
