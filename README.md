@@ -49,8 +49,8 @@ Afterwards, tests can be run individually:
     - `test_visualizer.py`: Unit test for visualizer.py
 - `data/`: Climate data (CSV format)
 - `requirements.txt`: Project dependencies
-- `projectreport_mla.pdf`: Project report in MLA formatting
-- `projectreport_ieee.pdf`: Project report in IEEE formatting
+- `project_report_MLA.pdf`: Project report in MLA formatting
+- `project_report_IEEE.pdf`: Project report in IEEE formatting
 
 ## Project Features
 
