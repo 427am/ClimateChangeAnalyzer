@@ -46,8 +46,6 @@ def main():
     # Temperature prediction and fitting for the linear model
     linear_model = CustomTemperaturePredictor(learning_rate=0.001, n_iterations=2000)
     linear_model.fit(X, y)
-
-    # Data is slightly denormalized to ensure the linear model is better comparable to SARIMA
     y_pred_linear = linear_model.predict(X)
     
     # Temperature prediction with SARIMA model
